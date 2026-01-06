@@ -1,14 +1,15 @@
 import React from 'react';
 import { GalleryImage } from '../types';
 
-// Using consistent specific IDs to ensure the same "random" images load for visual consistency
+// Images are loaded from the public/KERASE_SLIKE folder
+// Expected filenames: 1.jpg, 2.jpg, ... 6.jpg
 const images: GalleryImage[] = [
-  { id: 1, url: 'https://picsum.photos/id/101/800/600', alt: 'Kopalnica detajl' },
-  { id: 2, url: 'https://picsum.photos/id/20/600/800', alt: 'Delovni proces' },
-  { id: 3, url: 'https://picsum.photos/id/175/800/600', alt: 'Talna obloga' },
-  { id: 4, url: 'https://picsum.photos/id/188/800/800', alt: 'Ploščice kuhinja' },
-  { id: 5, url: 'https://picsum.photos/id/250/600/400', alt: 'Zaključna dela' },
-  { id: 6, url: 'https://picsum.photos/id/355/800/600', alt: 'Terasa' },
+  { id: 1, url: '/KERASE_SLIKE/1.jpg', alt: 'Prenova kopalnice' },
+  { id: 2, url: '/KERASE_SLIKE/2.jpg', alt: 'Priprava podlage in estrih' },
+  { id: 3, url: '/KERASE_SLIKE/3.jpg', alt: 'Polaganje keramike velikega formata' },
+  { id: 4, url: '/KERASE_SLIKE/4.jpg', alt: 'Detajlno polaganje mozaika' },
+  { id: 5, url: '/KERASE_SLIKE/5.jpg', alt: 'Zaključna dela in fugiranje' },
+  { id: 6, url: '/KERASE_SLIKE/6.jpg', alt: 'Zunanja terasa in stopnice' },
 ];
 
 const Gallery: React.FC = () => {
@@ -37,6 +38,11 @@ const Gallery: React.FC = () => {
                 alt={img.alt}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                onError={(e) => {
+                  // Fallback if image is missing, to prevent broken UI
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://via.placeholder.com/800x600?text=Slika+v+pripravi';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                 <span className="text-white font-medium text-lg translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
@@ -48,7 +54,7 @@ const Gallery: React.FC = () => {
         </div>
         
         <div className="mt-12 text-center text-slate-500 italic border-2 border-dashed border-slate-300 rounded-lg p-8 bg-slate-50/50">
-          <p>Tukaj bo prostor za vaše slike projektov.</p>
+          <p>Za ogled več referenc nas kontaktirajte ali nas obiščite.</p>
         </div>
       </div>
     </section>
