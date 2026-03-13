@@ -1,64 +1,103 @@
 import React from 'react';
-import Button from './Button';
-import { ChevronDown, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Clock } from 'lucide-react';
+import { Page } from '../App';
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  onNavigate: (page: Page) => void;
+  onVideoLoaded?: () => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onNavigate, onVideoLoaded }) => {
+  
+  const handleScrollToContact = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Ciljamo specifičen ID za delovni čas v footerju
+    const hoursSection = document.getElementById('working-hours');
+    if (hoursSection) {
+      // block: 'center' zagotovi, da je element na sredini ekrana, ne na vrhu
+      hoursSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      // Fallback
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleScrollToCatalog = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const catalogSection = document.getElementById('catalog');
+    if (catalogSection) {
+      catalogSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div id="home" className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/KERASE_SLIKE/hero.jpg"
-          alt="Modern bathroom tiling"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-slate-900/60"></div>
+    <section id="home" className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-nature-900">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <iframe
+          src="https://player.vimeo.com/video/1126626352?background=1&autoplay=1&loop=1&byline=0&title=0"
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full w-[177.77vh] h-[56.25vw] -translate-x-1/2 -translate-y-1/2 pointer-events-none object-cover"
+          frameBorder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          title="Video ozadje"
+          onLoad={onVideoLoaded}
+        ></iframe>
+        {/* Text readability overlay (Left to Right) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-nature-900/90 via-nature-900/40 to-transparent"></div>
+        {/* Header readability overlay (Top to Bottom) */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-nature-900/60 to-transparent pointer-events-none"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left w-full pt-20">
-        <div className="max-w-3xl animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/30 text-accent-hover text-sm font-semibold mb-6 backdrop-blur-sm">
-             <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-             Kvaliteta na prvem mestu
+      {/* Content */}
+      <div className="container mx-auto px-4 md:px-6 relative z-10 pt-20">
+        <div className="max-w-3xl text-white">
+          <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold tracking-wider mb-6 border border-white/30 uppercase">
+            Družinska tradicija od leta 1993
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-tight mb-6">
-            Profesionalno polaganje <span className="text-accent">keramike</span> in talnih oblog
-          </h1>
-          <p className="text-lg sm:text-xl text-slate-300 mb-8 max-w-2xl leading-relaxed">
-            Simo Evdjić s.p. - Vaš zanesljiv partner za prenovo doma. Nudimo vrhunsko izvedbo keramičarskih del, polaganje vinila in laminata z dolgoročno garancijo.
-          </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
-              Pošlji povpraševanje
-            </Button>
-            <Button variant="outline" className="!text-white !border-white hover:!bg-white/10" onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}>
-              Poglejte reference
-            </Button>
-          </div>
+          {/* Mobile Title (Smaller) & Desktop Title */}
+          <h1 className="text-4xl md:text-7xl font-serif font-bold leading-tight mb-6 uppercase">
+            Dobrodošli na <br/>
+            <span className="text-nature-300">vrtnariji</span>
+          </h1>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-slate-300 border-t border-slate-700/50 pt-8">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-accent w-5 h-5" />
-              <span>Dolgoletne izkušnje</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-accent w-5 h-5" />
-              <span>Hitra izvedba</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="text-accent w-5 h-5" />
-              <span>Konkurenčne cene</span>
-            </div>
+          {/* Mobile Description (Shortened) */}
+          <p className="text-lg text-gray-200 mb-8 font-light leading-relaxed md:hidden">
+            Smo majhno družinsko podjetje z več kot 30-letno tradicijo v svetu vrtnarjenja. Nahajamo se na čudoviti lokaciji v Novi Gorici, kjer ustvarjamo zelene zgodbe...
+          </p>
+
+          {/* Desktop Description (Full) */}
+          <p className="text-xl text-gray-200 mb-8 font-light leading-relaxed hidden md:block">
+            Smo majhno družinsko podjetje z več kot 30-letno tradicijo v svetu vrtnarjenja. Nahajamo se na čudoviti lokaciji v Novi Gorici (Ščedne 6), z enostavnim dostopom iz Vojkove ulice. V naši vrtnariji ponujamo bogato izbiro sezonskih rastlin, trajnic, dišavnic, okrasnih grmovnic, sobnih rastlin, zelenjave in jagodičevja. Poleg tega vam nudimo vrhunska gnojila, zemlje in lonce, ki bodo poskrbeli za vitalnost vašega vrta.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 items-start">
+            <a 
+              href="#catalog" 
+              onClick={handleScrollToCatalog}
+              className="bg-nature-500 hover:bg-nature-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 group"
+            >
+              Raziščite naše rastline
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </a>
+            <a 
+              href="#working-hours"
+              onClick={handleScrollToContact}
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-medium transition-all text-center flex items-center justify-center gap-2"
+            >
+              <Clock size={18} />
+              Delovni čas
+            </a>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce text-white/50 hidden md:block">
-        <ChevronDown className="w-8 h-8" />
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
       </div>
-    </div>
+    </section>
   );
 };
-
-export default Hero;
